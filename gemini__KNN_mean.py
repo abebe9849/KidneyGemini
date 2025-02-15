@@ -158,7 +158,7 @@ for IDX in df["WSI"].unique()[:]:
 
     sample_file_2 = [PIL.Image.open(i) for i in image_paths]
     fewshot = []
-    exmaplelabel = []
+    examplelabel = []
 
     test_emb_mean = test_emb_.mean(axis=0)
     indices, distances = faiss_knn_search(df_index, test_emb_mean, k=70)
@@ -166,11 +166,11 @@ for IDX in df["WSI"].unique()[:]:
         if ind in test_index:
             continue
         fewshot.append(df.iloc[ind]["path"])
-        exmaplelabel.append(label2labelname[df.iloc[ind]["label"]])
+        examplelabel.append(label2labelname[df.iloc[ind]["label"]])
 
     image_paths_few= []
     fewshot = fewshot[:K]
-    exmaplelabel = exmaplelabel[:K]
+    examplelabel = examplelabel[:K]
     for i in fewshot:
         i = i.split("/")[-1]    
         image_paths_few.append(f"{DIR}/{i}")
@@ -200,7 +200,7 @@ for IDX in df["WSI"].unique()[:]:
     if re_think:
         prompt+="After calculating the predicted value, recheck the clinical information and image information to determine whether the predicted value is correct, and if necessary, revise the prediction."
     if K>0:
-        prompt+=f"first {len(fewshot)} images are exmaple,example labels are {exmaplelabel},the others are what I want you to classify,example images are similar to the images I want you to classify,OUTPUT is only labelname & probarility,do not output other text"
+        prompt+=f"first {len(fewshot)} images are example,example labels are {examplelabel},the others are what I want you to classify,example images are similar to the images I want you to classify,OUTPUT is only labelname & probarility,do not output other text"
 
     prompt+="""EXAMPLE:OUTPUT={'MCN':0.XXX,'MSP':0.XXX,'MEN':0.XXX,'DMN':0.XXX},sum of 4 class probarility has to be 1,output is only labelname & probarility,dnt output other text"""
     
